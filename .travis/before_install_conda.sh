@@ -9,6 +9,10 @@ conda config --set changeps1 no
 conda config --set show_channel_urls true
 conda update -q conda
 
+#check conda environments
+conda info --envs
+#
+
 conda config --add channels $CONDA_CHANNEL
 
 # Useful for debugging any issues with conda

@@ -12,6 +12,8 @@ export WTSI_NPG_iRODS_Test_irodsEnvFile=$HOME/.irods/.irodsEnv
 export WTSI_NPG_iRODS_Test_IRODS_ENVIRONMENT_FILE=$HOME/.irods/irods_environment.json
 export WTSI_NPG_iRODS_Test_Resource=testResc
 
+eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib) #added
+
 cpanm --notest --installdeps . || find /home/travis/.cpanm/work -cmin -1 -name '*.log' -exec tail -n20  {} \;
 perl Build.PL
 ./Build

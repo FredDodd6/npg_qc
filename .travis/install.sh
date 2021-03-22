@@ -12,6 +12,10 @@ CONDA_TEST_ENV=$3
 
 TRAVIS_PYTHON_VERSION=$4
 
+#TODO move these to conda section?
+export PATH="$HOME/miniconda/bin:$PATH"
+source activate "$CONDA_TEST_ENV"
+
 # CPAN as in npg_npg_deploy
 cpanm --notest --reinstall App::cpanminus
 cpanm --quiet --notest Alien::Tidyp

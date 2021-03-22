@@ -25,23 +25,19 @@ jobs:
       run: |
           ${GITHUB_WORKSPACE}/.travis/before_install_conda.sh
           ${GITHUB_WORKSPACE}/.travis/before_install.sh $TRAVIS_NODE_VERSION $TRAVIS_NPM_VERSION
+          cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
+          ${GITHUB_WORKSPACE}/.travis/install.sh $WTSI_NPG_BUILD_BRANCH $WTSI_NPG_GITHUB_URL $CONDA_TEST_ENV $TRAVIS_PYTHON_VERSION
       env: 
         TRAVIS_NODE_VERSION: "6.12.2"
         TRAVIS_NPM_VERSION: "4.5.0"
-
-    - name: install scripts
-      run: |
-          ${GITHUB_WORKSPACE}/.travis/install.sh $WTSI_NPG_BUILD_BRANCH $WTSI_NPG_GITHUB_URL $CONDA_TEST_ENV $TRAVIS_PYTHON_VERSION
-      env:
         WTSI_NPG_BUILD_BRANCH: ${GITHUB_HEAD_REF} #getting name of current github branch
         WTSI_NPG_GITHUB_URL: https://github.com/wtsi-npg
         CONDA_TEST_ENV: test-environment
         TRAVIS_PYTHON_VERSION: "2.7"
-       
+
     - name: run script
       run: |
-          export PATH="$HOME/miniconda/bin:$PATH"
-          source activate "$CONDA_TEST_ENV"
+          cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
           ${GITHUB_WORKSPACE}/.travis/script.sh $TRAVIS_NODE_VERSION
       env:
         CONDA_TEST_ENV: test-environment
