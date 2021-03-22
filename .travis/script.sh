@@ -2,6 +2,8 @@
 
 set -e -u -x
 
+TRAVIS_NODE_VERSION=$1
+
 unset PERL5LIB
 
 export PATH=/home/travis/.nvm/versions/node/v${TRAVIS_NODE_VERSION}/bin:$PATH

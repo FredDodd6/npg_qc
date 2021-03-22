@@ -4,7 +4,13 @@ set -e -u -x
 
 # The default build branch for all repositories. This defaults to
 # TRAVIS_BRANCH unless set in the Travis build environment.
-WTSI_NPG_BUILD_BRANCH=${WTSI_NPG_BUILD_BRANCH:=$TRAVIS_BRANCH}
+WTSI_NPG_BUILD_BRANCH=$1
+
+WTSI_NPG_GITHUB_URL=$2
+
+CONDA_TEST_ENV=$3
+
+TRAVIS_PYTHON_VERSION=$4
 
 # CPAN as in npg_npg_deploy
 cpanm --notest --reinstall App::cpanminus
@@ -41,4 +47,4 @@ do
     ./Build install
 done
 
-cd $TRAVIS_BUILD_DIR
+cd

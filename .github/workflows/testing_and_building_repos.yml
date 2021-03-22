@@ -1,0 +1,57 @@
+name: testing_and_building_repo
+on: [push, pull_request]
+jobs:
+  build: 
+    strategy:
+      matrix:
+        os: ['ubuntu-18.04']
+        perl: ['5.26'] 
+        
+    runs-on: ${{matrix.os}} 
+    name: Perl ${{ matrix.perl }} on ${{ matrix.os }}  
+    steps:
+    - uses: actions/checkout@v2 
+    
+    #install libgd-dev and uuid-dev
+    - name: install libgd-dev and uuid-dev 
+      run:
+          sudo apt-get install -y libgd-dev uuid-dev 
+     
+    - name: install cpanm
+      run: |
+          wget -qO - https://cpanmin.us | /usr/bin/perl - --sudo App::cpanminus
+
+    - name: Run before install scripts
+      run: |
+          ${GITHUB_WORKSPACE}/.travis/before_install_conda.sh
+          ${GITHUB_WORKSPACE}/.travis/before_install.sh $TRAVIS_NODE_VERSION $TRAVIS_NPM_VERSION
+      env: 
+        TRAVIS_NODE_VERSION: "6.12.2"
+        TRAVIS_NPM_VERSION: "4.5.0"
+
+    - name: install scripts
+      run: |
+          ${GITHUB_WORKSPACE}/.travis/install.sh $WTSI_NPG_BUILD_BRANCH $WTSI_NPG_GITHUB_URL $CONDA_TEST_ENV $TRAVIS_PYTHON_VERSION
+      env:
+        WTSI_NPG_BUILD_BRANCH: ${GITHUB_HEAD_REF} #getting name of current github branch
+        WTSI_NPG_GITHUB_URL: https://github.com/wtsi-npg
+        CONDA_TEST_ENV: test-environment
+        TRAVIS_PYTHON_VERSION: "2.7"
+       
+    - name: run script
+      run: |
+          export PATH="$HOME/miniconda/bin:$PATH"
+          source activate "$CONDA_TEST_ENV"
+          ${GITHUB_WORKSPACE}/.travis/script.sh $TRAVIS_NODE_VERSION
+      env:
+        CONDA_TEST_ENV: test-environment
+        TRAVIS_NODE_VERSION: "6.12.2"
+
+    # Archive logs if failure
+    - name: Archive CPAN logs
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: cpan_log
+        path: /home/runner/.cpanm/work/*/build.log
+        retention-days: 5
