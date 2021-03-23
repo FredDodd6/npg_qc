@@ -53,7 +53,7 @@ export PATH="$HOME/miniconda/bin:$PATH"
 source activate "$CONDA_TEST_ENV"
 
 #TODO adding in perl5lib location for npg_qc locations
-export PERL5LIB=${WTSI_NPG_BUILD_BRANCH}/lib/npg_qc/
+export PERL5LIB=${WTSI_NPG_BUILD_BRANCH}/lib/npg_qc/:$PERL5LIB
 
  #WTSI NPG Perl repo dependencies
 repos=""
@@ -69,6 +69,7 @@ done
 
 # Finally, bring any common dependencies up to the latest version and
 # install
+
 for repo in $repos
 do
     cd $repo
