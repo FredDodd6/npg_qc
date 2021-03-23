@@ -73,7 +73,7 @@ done
 for repo in $repos
 do
     cd $repo
-    cpanm --quiet --notest --installdeps . #TODO temp remove: || find /home/travis/.cpanm/work -cmin -1 -name '*.log' -exec tail -n20  {} \;		
+    cpanm --quiet --notest --installdeps . || find /home/travis/.cpanm/work -cmin -1 -name '*.log' -exec tail -n20  {} \;		
     perl Build.PL
     ./Build		
     ./Build install
