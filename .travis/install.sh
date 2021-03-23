@@ -35,14 +35,6 @@ conda config --add channels $CONDA_CHANNEL
 # Useful for debugging any issues with conda
 conda info -a
 
-##### TODO
-
-
-
-#TODO move these to conda section?
-export PATH="$HOME/miniconda/bin:$PATH"
-source activate "$CONDA_TEST_ENV"
-#
 
 # CPAN as in npg_npg_deploy
 cpanm --notest --reinstall App::cpanminus
@@ -56,7 +48,14 @@ conda create -q --name "$CONDA_TEST_ENV" python=$TRAVIS_PYTHON_VERSION
 conda install --name "$CONDA_TEST_ENV" npg_qc_utils
 conda install --name "$CONDA_TEST_ENV" baton
 
-# WTSI NPG Perl repo dependencies
+#activating created conda environment
+export PATH="$HOME/miniconda/bin:$PATH"
+source activate "$CONDA_TEST_ENV"
+
+#TODO adding in perl5lib location for npg_qc locations
+export PERL5LIB=${WTSI_NPG_BUILD_BRANCH}/lib/npg_qc/
+
+ #WTSI NPG Perl repo dependencies
 repos=""
 for repo in perl-dnap-utilities ml_warehouse npg_tracking npg_seq_common perl-irods-wrap; do
     cd /tmp
@@ -73,7 +72,7 @@ done
 for repo in $repos
 do
     cd $repo
-    cpanm --quiet --notest --installdeps . || find /home/travis/.cpanm/work -cmin -1 -name '*.log' -exec tail -n20  {} \;		
+    cpanm --quiet --notest --installdeps . #TODO temp remove: || find /home/travis/.cpanm/work -cmin -1 -name '*.log' -exec tail -n20  {} \;		
     perl Build.PL
     ./Build		
     ./Build install
