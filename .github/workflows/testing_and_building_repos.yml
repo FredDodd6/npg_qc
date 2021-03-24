@@ -21,7 +21,7 @@ jobs:
       run: |
           wget -qO - https://cpanmin.us | /usr/bin/perl - --sudo App::cpanminus
 
-    - name: Run before install scripts
+    - name: Run install scripts
       run: |
           ${GITHUB_WORKSPACE}/.travis/before_install.sh $TRAVIS_NODE_VERSION $TRAVIS_NPM_VERSION
           echo "before_install.sh complete##"

@@ -14,7 +14,7 @@ TRAVIS_PYTHON_VERSION=$4
 
 CONDA_CHANNEL=$5
 
-# testing adding conda stuff here TODO
+# testing adding conda stuff here TODO change conda version
 wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh -O miniconda.sh
 
 /bin/bash miniconda.sh -b -p "$HOME/miniconda"
@@ -24,7 +24,7 @@ hash -r
 conda config --set always_yes yes
 conda config --set changeps1 no
 conda config --set show_channel_urls true
-#conda update -q conda # temp remove TODO
+#conda update -q conda # temp remove 
 
 #check conda environments
 conda info --envs
@@ -73,7 +73,7 @@ done
 for repo in $repos
 do
     cd $repo
-    cpanm --quiet --notest --installdeps . || find /home/travis/.cpanm/work -cmin -1 -name '*.log' -exec tail -n20  {} \;		
+    cpanm --quiet --notest --installdeps . || find $HOME/.cpanm/work -cmin -1 -name '*.log' -exec tail -n20  {} \;		
     perl Build.PL
     ./Build		
     ./Build install
