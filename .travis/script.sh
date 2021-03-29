@@ -19,6 +19,7 @@ eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib) #added
 
 #localib npg
 #localib ext
+cpanm Perl::Critic@1.140 #installing newest version of Perl::Critic
 
 cpanm --notest --installdeps . || find $HOME/.cpanm/work -cmin -1 -name '*.log' -exec tail -n20  {} \;
 perl Build.PL
@@ -31,6 +32,7 @@ perl Build.PL
 #localib ext
 pushd npg_qc_viewer
 cpanm --notest --installdeps . || find $HOME/.cpanm/work -cmin -1 -name '*.log' -exec tail -n20  {} \;
+cpanm Perl::Critic@1.140 #installing newest version of Perl::Critic
 perl Build.PL --installjsdeps
 ./Build
 ./Build test --verbose
