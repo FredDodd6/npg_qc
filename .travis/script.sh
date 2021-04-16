@@ -17,22 +17,22 @@ export WTSI_NPG_iRODS_Test_Resource=testResc
 export PERL5LIB=${WTSI_NPG_BUILD_BRANCH}/lib/ #added
 eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib) #added
 
-#localib npg
-#localib ext
-cpanm Perl::Critic@1.140 #installing newest version of Perl::Critic
+eval $(perl -I ~/perl5ext/lib/perl5/ -Mlocal::lib=~/perl5npg)
+eval $(perl -I ~/perl5ext/lib/perl5/ -Mlocal::lib=~/perl5ext)
 
 cpanm --notest --installdeps . || find $HOME/.cpanm/work -cmin -1 -name '*.log' -exec tail -n20  {} \;
 perl Build.PL
 ./Build
 ./Build test --verbose
 
-#locallib npg
+eval $(perl -I ~/perl5ext/lib/perl5/ -Mlocal::lib=~/perl5npg)
 ./Build install
 
-#localib ext
+
+eval $(perl -I ~/perl5ext/lib/perl5/ -Mlocal::lib=~/perl5ext)
 pushd npg_qc_viewer
 cpanm --notest --installdeps . || find $HOME/.cpanm/work -cmin -1 -name '*.log' -exec tail -n20  {} \;
-cpanm Perl::Critic@1.140 #installing newest version of Perl::Critic
+
 perl Build.PL --installjsdeps
 ./Build
 ./Build test --verbose

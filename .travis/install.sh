@@ -37,6 +37,7 @@ conda info -a
 
 
 # CPAN as in npg_npg_deploy
+eval $(perl -I ~/perl5ext/lib/perl5/ -Mlocal::lib=~/perl5ext)
 cpanm --notest --reinstall App::cpanminus
 cpanm --quiet --notest Alien::Tidyp
 cpanm --quiet --notest LWP::Protocol::https
@@ -69,7 +70,7 @@ done
 
 # Finally, bring any common dependencies up to the latest version and
 # install
-
+eval $(perl -I ~/perl5ext/lib/perl5/ -Mlocal::lib=~/perl5npg)
 for repo in $repos
 do
     cd $repo

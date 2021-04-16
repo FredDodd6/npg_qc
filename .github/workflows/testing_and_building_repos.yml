@@ -12,6 +12,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2 
     
+    # Caching cpanm external modules
+    - name: Cache cpanm external modules
+      id: cpanmCache
+      uses: actions/cache@v2
+      with:
+        path: ~/perl5ext
+        key: ${{ matrix.os}}-build-cpanm-external
+
     #install libgd-dev and uuid-dev
     - name: install libgd-dev and uuid-dev 
       run:
