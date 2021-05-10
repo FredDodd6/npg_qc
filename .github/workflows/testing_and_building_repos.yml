@@ -8,6 +8,8 @@ jobs:
         perl: ['5.26'] 
         
     runs-on: ${{matrix.os}} 
+    env:
+      WSI_CONDA_CHANNEL: "https://dnap.cog.sanger.ac.uk/npg/conda/devel/generic"
     name: Perl ${{ matrix.perl }} on ${{ matrix.os }}  
     steps:
     - uses: actions/checkout@v2 
@@ -20,12 +22,18 @@ jobs:
         path: ~/perl5ext
         key: ${{ matrix.os}}-build-cpanm-external
 
+    - name: Initialize Miniconda
+      run: |
+          echo 'source $CONDA/etc/profile.d/conda.sh' >> "$HOME/.bash_profile"
+
     # Caching conda
     - name: Cache conda
       id: minicondaCache
       uses: actions/cache@v2
       with:
-        path: $HOME/miniconda
+        path: |
+          ~/conda/pkgs
+          ~/conda/envs
         key: ${{ matrix.os}}-build-miniconda
 
     #install libgd-dev and uuid-dev
@@ -41,21 +49,28 @@ jobs:
           #export PATH=$HOME/miniconda/bin:$PATH;
           #hash -r
          
-          conda update -n base -c defaults conda
+          conda config --prepend pkgs_dirs ~/conda/pkgs
+          conda config --prepend envs_dirs ~/conda/envs
+          
+          conda config --set auto_update_conda False
+          conda config --prepend channels "$WSI_CONDA_CHANNEL"
+          conda config --append channels conda-forge
+          conda info
 
-          conda config --set always_yes yes
-          conda config --set changeps1 no
-          conda config --set show_channel_urls true
+          #conda config --set always_yes yes
+          #conda config --set changeps1 no
+          #conda config --set show_channel_urls true
 
-          conda config --add channels $CONDA_CHANNEL
-          conda create -q --name "$CONDA_TEST_ENV" python=$TRAVIS_PYTHON_VERSION
+          #conda config --add channels $CONDA_CHANNEL
+          conda create -y -n "$CONDA_TEST_ENV"
+          conda install --name "$CONDA_TEST_ENV" python=$TRAVIS_PYTHON_VERSION
           conda install --name "$CONDA_TEST_ENV" npg_qc_utils
           conda install --name "$CONDA_TEST_ENV" baton
 
           source activate "$CONDA_TEST_ENV" 
       env:
-        WTSI_NPG_CONDA_REPO: https://dnap.cog.sanger.ac.uk/npg/conda/prod/generic
-        CONDA_CHANNEL: https://dnap.cog.sanger.ac.uk/npg/conda/prod/generic
+        #WTSI_NPG_CONDA_REPO: https://dnap.cog.sanger.ac.uk/npg/conda/prod/generic
+        CONDA_CHANNEL: https://dnap.cog.sanger.ac.uk/npg/conda/devel/generic
         CONDA_TEST_ENV: test-environment
         TRAVIS_PYTHON_VERSION: "2.7"
  
