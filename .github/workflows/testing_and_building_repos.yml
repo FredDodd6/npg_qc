@@ -8,8 +8,14 @@ jobs:
         perl: ['5.26'] 
         
     runs-on: ${{matrix.os}} 
+    
+    defaults:
+      run:
+        shell: bash -l -e -o pipefail {0}
+
     env:
       WSI_CONDA_CHANNEL: "https://dnap.cog.sanger.ac.uk/npg/conda/devel/generic"
+
     name: Perl ${{ matrix.perl }} on ${{ matrix.os }}  
     steps:
     - uses: actions/checkout@v2 
@@ -56,18 +62,22 @@ jobs:
           conda config --prepend channels "$WSI_CONDA_CHANNEL"
           conda config --append channels conda-forge
           conda info
-
+          echo "conda forge done 1.0"
           #conda config --set always_yes yes
           #conda config --set changeps1 no
           #conda config --set show_channel_urls true
 
           #conda config --add channels $CONDA_CHANNEL
           conda create -y -n "$CONDA_TEST_ENV"
+          echo "created test-environment"
           conda install --name "$CONDA_TEST_ENV" python=$TRAVIS_PYTHON_VERSION
+          echo "installed python"
           conda install --name "$CONDA_TEST_ENV" npg_qc_utils
+          echo "installed npg_qc_utils"
           conda install --name "$CONDA_TEST_ENV" baton
-
-          source activate "$CONDA_TEST_ENV" 
+          echo "installed baton"
+          conda activate "$CONDA_TEST_ENV" # changed from source
+          echo "activated conda test_env"
       env:
         #WTSI_NPG_CONDA_REPO: https://dnap.cog.sanger.ac.uk/npg/conda/prod/generic
         CONDA_CHANNEL: https://dnap.cog.sanger.ac.uk/npg/conda/devel/generic
