@@ -42,19 +42,12 @@ jobs:
           ~/conda/envs
         key: ${{ matrix.os}}-build-miniconda
 
-    #install libgd-dev and uuid-dev
     - name: install libgd-dev and uuid-dev 
       run:
           sudo apt-get install -y libgd-dev uuid-dev 
     
     - name: install conda client, baton,samtools, set up conda environment
       run: |
-          #wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh -O miniconda.sh
-          #chmod +x miniconda.sh;
-          #./miniconda.sh -b  -p $HOME/miniconda;
-          #export PATH=$HOME/miniconda/bin:$PATH;
-          #hash -r
-         
           conda config --prepend pkgs_dirs ~/conda/pkgs
           conda config --prepend envs_dirs ~/conda/envs
           
@@ -62,27 +55,16 @@ jobs:
           conda config --prepend channels "$WSI_CONDA_CHANNEL"
           conda config --append channels conda-forge
           conda info
-          echo "conda forge done 1.0"
-          #conda config --set always_yes yes
-          #conda config --set changeps1 no
-          #conda config --set show_channel_urls true
 
-          #conda config --add channels $CONDA_CHANNEL
           conda create -y -n "$CONDA_TEST_ENV"
-          echo "created test-environment"
-          conda install --name "$CONDA_TEST_ENV" python=$TRAVIS_PYTHON_VERSION
-          echo "installed python"
+          #conda install --name "$CONDA_TEST_ENV" python=$TRAVIS_PYTHON_VERSION
           conda install --name "$CONDA_TEST_ENV" npg_qc_utils
-          echo "installed npg_qc_utils"
           conda install --name "$CONDA_TEST_ENV" baton
-          echo "installed baton"
-          conda activate "$CONDA_TEST_ENV" # changed from source
-          echo "activated conda test_env"
+          conda activate "$CONDA_TEST_ENV"
       env:
-        #WTSI_NPG_CONDA_REPO: https://dnap.cog.sanger.ac.uk/npg/conda/prod/generic
         CONDA_CHANNEL: https://dnap.cog.sanger.ac.uk/npg/conda/devel/generic
         CONDA_TEST_ENV: test-environment
-        TRAVIS_PYTHON_VERSION: "2.7"
+        #TRAVIS_PYTHON_VERSION: "2.7"
  
     - name: install cpanm
       run: |
